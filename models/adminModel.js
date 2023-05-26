@@ -18,10 +18,10 @@ const AdminSchema = new Schema({
     type: String,
     required: true,
   },
-  is_super_admin: {
-    type: Boolean,
-    default: false,
-  },
+  // is_super_admin: {
+  //   type: Boolean,
+  //   default: false,
+  // },
   token: {
     type: String,
   },

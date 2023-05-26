@@ -1,4 +1,6 @@
 import Paramedic from "../models/paramedicModel.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 class ParamedicController {
   async getAllParamedics(req, res, next) {
@@ -67,11 +69,47 @@ class ParamedicController {
       if (oldParamedic) {
         return res.status(409).send("Paramedic Already Exist. Please Login");
       }
-
+      req.body.nick_name = nick_name.toLowerCase();
+      let encryptedPass = "";
+      await bcrypt.hash(req.body.password, 10).then(function (hash) {
+        encryptedPass = hash;
+      });
+      req.body.password = encryptedPass;
       const paramedic = await Paramedic.create(req.body);
       res.status(201).send({ success: true, data: paramedic });
     } catch (error) {
       next(error);
+    }
+  }
+
+  async login(req, res, next) {
+    try {
+      const { nick_name, password } = req.body;
+
+      if (!(nick_name && password)) {
+        res.status(400).send("All input are required");
+      }
+
+      const user = await Paramedic.findOne({ nick_name });
+
+      if (user && (await bcrypt.compare(password, user.password))) {
+        const token = jwt.sign(
+          { user_id: user._id, nick_name },
+          process.env.USER_TOKEN_KEY,
+          {
+            expiresIn: "12h",
+          }
+        );
+
+        user.token = token;
+
+        return res.cookie("token", token).status(200).json(user);
+      } else {
+        return res.status(500).json({ error: "Invalid Credentials" });
+      }
+    } catch (error) {
+      if (error) return next(error);
+      return res.status(400).send(`Error: ${error}`);
     }
   }
 }

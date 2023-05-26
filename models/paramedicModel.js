@@ -49,6 +49,18 @@ const paramedicSchema = new Schema({
     type: String,
     required: true,
   },
+  is_super_paramedic: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  token: {
+    type: String,
+  },
 });
 
 const Paramedic = model("Paramedic", paramedicSchema);

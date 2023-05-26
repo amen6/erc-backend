@@ -18,4 +18,7 @@ router.patch("/:id", paramedicController.editParamedic);
 // delete an Paramedic by ID
 router.delete("/:id", paramedicController.deleteParamedic);
 
+// Login
+router.post("/login", paramedicController.login);
+
 export default router;
