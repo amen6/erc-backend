@@ -62,7 +62,7 @@ class Hospital {
 
   async addHospital(req, res, next) {
     try {
-      const { name } = req.body;
+      const { name, image } = req.body;
 
       // Validate user input
       if (!name) {
@@ -78,6 +78,7 @@ class Hospital {
 
       const hospital = await HospitalModel.create({
         name: name,
+        image: image,
       });
 
       res.status(201).json(hospital);

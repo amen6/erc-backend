@@ -56,7 +56,7 @@ const missionSchema = new Schema({
       },
       message: "Invalid value",
     },
-    required: false,
+    required: true,
   },
   to_location: {
     type: Schema.Types.Mixed,
@@ -69,7 +69,7 @@ const missionSchema = new Schema({
       },
       message: "Invalid value",
     },
-    required: false,
+    required: true,
   },
   // from_hospital_id: {
   //   type: Schema.Types.ObjectId,

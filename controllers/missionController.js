@@ -1,4 +1,5 @@
 import MissionModel from "../models/missionModel.js";
+import MissionParamedicsModel from "../models/missionParamedicsModel.js";
 
 function generateId() {
   let datenow = new Date().getFullYear();
@@ -17,8 +18,42 @@ const idIncrementer = generateId();
 class Mission {
   async getAllMissions(req, res, next) {
     try {
-      const missions = await MissionModel.find({});
-      res.status(200).json({ success: true, data: missions });
+      // const missions = await MissionModel.find({});
+      const missions = await MissionModel.aggregate([
+        {
+          $lookup: {
+            from: "missionparamedics",
+            localField: "_id",
+            foreignField: "mission_id",
+            as: "missionParamedics",
+          },
+        },
+      ]);
+
+      if (missions.length === 0) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Mission not found" });
+      }
+
+      const populatedMissions = await MissionModel.populate(missions, [
+        { path: "ambulance_id", select: "name" },
+        { path: "case_id", select: "name" },
+        { path: "patient_id", select: "first_name last_name" },
+        // { path: "from_location", select: "name" },
+        // { path: "to_location", select: "name" },,
+        // {
+        //   path: "from_location",
+        //   match: { $type: "objectId" },
+        //   select: "name",
+        // },
+        // {
+        //   path: "to_location",
+        //   match: { $type: "objectId" },
+        //   select: "name",
+        // },
+      ]);
+      res.status(200).json({ success: true, data: populatedMissions });
     } catch (error) {
       next(error);
     }
@@ -91,7 +126,7 @@ class Mission {
       }
 
       await MissionModel.deleteOne({ _id: id });
-
+      await MissionParamedicsModel.deleteOne({ mission_id: id });
       res
         .status(200)
         .json({ success: true, message: "Mission deleted successfully" });
@@ -102,7 +137,7 @@ class Mission {
 
   async createMission(req, res, next) {
     try {
-      req.body.generated_id = idIncrementer();
+      console.log(req.body);
       const mission = await MissionModel.create(req.body);
       res.status(201).json({ success: true, data: mission });
     } catch (error) {
