@@ -1,5 +1,7 @@
 import MissionModel from "../models/missionModel.js";
 import MissionParamedicsModel from "../models/missionParamedicsModel.js";
+import HospitalModel from "../models/hospitalModel.js";
+import { isValidObjectId } from "mongoose";
 
 function generateId() {
   let datenow = new Date().getFullYear();
@@ -18,7 +20,6 @@ const idIncrementer = generateId();
 class Mission {
   async getAllMissions(req, res, next) {
     try {
-      // const missions = await MissionModel.find({});
       const missions = await MissionModel.aggregate([
         {
           $lookup: {
@@ -40,20 +41,34 @@ class Mission {
         { path: "ambulance_id", select: "name" },
         { path: "case_id", select: "name" },
         { path: "patient_id", select: "first_name last_name" },
-        // { path: "from_location", select: "name" },
-        // { path: "to_location", select: "name" },,
-        // {
-        //   path: "from_location",
-        //   match: { $type: "objectId" },
-        //   select: "name",
-        // },
-        // {
-        //   path: "to_location",
-        //   match: { $type: "objectId" },
-        //   select: "name",
-        // },
       ]);
-      res.status(200).json({ success: true, data: populatedMissions });
+
+      const filteredMissions = populatedMissions.map(async (mission) => {
+        // Check if "to_location" and "from_location" are valid ObjectIds
+
+        const isToLocationObjectId = isValidObjectId(mission.to_location);
+        const isFromLocationObjectId = isValidObjectId(mission.from_location);
+
+        // Populate "to_location" if it is a valid ObjectId and get the "name"
+        if (isToLocationObjectId) {
+          mission.to_location = await HospitalModel.findById(
+            mission.to_location
+          ).select("name");
+        }
+
+        // Populate "from_location" if it is a valid ObjectId and get the "name"
+        if (isFromLocationObjectId) {
+          mission.from_location = await HospitalModel.findById(
+            mission.from_location
+          ).select("name");
+        }
+
+        return mission;
+      });
+
+      // Wait for all missions to be processed
+      const processedMissions = await Promise.all(filteredMissions);
+      res.status(200).json({ success: true, data: processedMissions });
     } catch (error) {
       next(error);
     }
