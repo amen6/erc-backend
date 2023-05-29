@@ -9,6 +9,9 @@ import patientController from "../controllers/patientController.js";
 // get all patients
 router.get("/", superAdminAuth, patientController.getAllPatients);
 
+// get all patients names
+router.get("/name/", patientController.getAllPatientsNames);
+
 // create a new patient
 router.post("/", authorization, patientController.addPatient);
 

@@ -10,6 +10,15 @@ class Patient {
     }
   }
 
+  async getAllPatientsNames(req, res, next) {
+    try {
+      const response = await PatientModel.find({}, "first_name last_name");
+      res.status(200).json({ success: true, response });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getPatient(req, res, next) {
     try {
       const { id } = req.params;
