@@ -14,6 +14,7 @@ import hospitalRouter from "./routes/hospitalRoutes.js";
 import adminRouter from "./routes/adminRoutes.js";
 import paramedicRouter from "./routes/paramedicRoutes.js";
 import missionParamedicsRouter from "./routes/missionParamedicsRoutes.js";
+import teamRouter from "./routes/teamRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -50,6 +51,7 @@ app.use("/mission", missionRoutes);
 app.use("/case", caseRouter);
 app.use("/paramedic", paramedicRouter);
 app.use("/missionparamedics", missionParamedicsRouter);
+app.use("/team", teamRouter);
 
 app.use("/uploads", express.static("./uploads"));
 
