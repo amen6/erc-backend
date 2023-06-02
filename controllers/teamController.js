@@ -3,12 +3,7 @@ import Team from "../models/teamModel.js";
 class TeamController {
   async getAllTeams(req, res, next) {
     try {
-      const response = await Team.find({})
-        .populate("mission_leader_id", "nick_name")
-        .populate("driver_id", "nick_name")
-        .populate("first_paramedic_id", "nick_name")
-        .populate("second_paramedic_id", "nick_name")
-        .populate("ambulance_id", "name");
+      const response = await Team.find({});
 
       res.status(200).json({ success: true, data: response });
     } catch (error) {
@@ -19,12 +14,7 @@ class TeamController {
   async getTeam(req, res, next) {
     try {
       const { id } = req.params;
-      const response = await Team.findOne({ _id: id })
-        .populate("mission_leader_id", "nick_name")
-        .populate("driver_id", "nick_name")
-        .populate("first_paramedic_id", "nick_name")
-        .populate("second_paramedic_id", "nick_name")
-        .populate("ambulance_id", "name");
+      const response = await Team.findOne({ _id: id });
 
       if (!response) {
         return res

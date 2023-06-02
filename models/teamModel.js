@@ -1,29 +1,28 @@
 import { Schema, model } from "mongoose";
 
 const teamSchema = new Schema({
-  mission_leader_id: {
-    type: Schema.Types.ObjectId,
-    ref: "Paramedic",
+  team_name: {
+    type: String,
     required: true,
   },
-  driver_id: {
-    type: Schema.Types.ObjectId,
-    ref: "Paramedic",
+  mission_leader: {
+    type: String,
     required: true,
   },
-  first_paramedic_id: {
-    type: Schema.Types.ObjectId,
-    ref: "Paramedic",
+  driver: {
+    type: String,
     required: true,
   },
-  second_paramedic_id: {
-    type: Schema.Types.ObjectId,
-    ref: "Paramedic",
+  first_paramedic: {
+    type: String,
+    required: true,
+  },
+  second_paramedic: {
+    type: String,
     required: false,
   },
-  ambulance_id: {
-    type: Schema.Types.ObjectId,
-    ref: "Ambulance",
+  ambulance: {
+    type: String,
     required: true,
   },
 });
