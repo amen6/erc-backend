@@ -1,27 +1,33 @@
 import express from "express";
 import authorization from "../middleware/adminAuth.js";
-import superAdminAuth from "../middleware/superAdminAuth.js";
 
 const router = express.Router();
 
 import patientController from "../controllers/patientController.js";
+import userAuth from "../middleware/userAuth.js";
+import adminAuth from "../middleware/adminAuth.js";
 
 // get all patients
-router.get("/", superAdminAuth, patientController.getAllPatients);
+router.get("/", userAuth, adminAuth, patientController.getAllPatients);
 
 // get all patients names
-router.get("/name/", patientController.getAllPatientsNames);
+router.get(
+  "/name/",
+  userAuth,
+  adminAuth,
+  patientController.getAllPatientsNames
+);
 
 // create a new patient
-router.post("/", authorization, patientController.addPatient);
+router.post("/", userAuth, adminAuth, patientController.addPatient);
 
 // get a specific patient by ID
-router.get("/:id", authorization, patientController.getPatient);
+router.get("/:id", userAuth, adminAuth, patientController.getPatient);
 
 // update a specific patient by ID
-router.patch("/:id", authorization, patientController.editPatient);
+router.patch("/:id", userAuth, adminAuth, patientController.editPatient);
 
 // delete an patient by ID
-router.delete("/:id", authorization, patientController.deletePatient);
+router.delete("/:id", userAuth, adminAuth, patientController.deletePatient);
 
 export default router;
