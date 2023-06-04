@@ -94,7 +94,11 @@ class ParamedicController {
 
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
-          { user_id: user._id, nick_name },
+          {
+            user_id: user._id,
+            nick_name,
+            is_super_paramedic: user.is_super_paramedic,
+          },
           process.env.USER_TOKEN_KEY,
           {
             expiresIn: "12h",
@@ -103,7 +107,9 @@ class ParamedicController {
 
         user.token = token;
 
-        return res.cookie("token", token).status(200).json(user);
+        return res
+          .status(200)
+          .json({ super: user.is_super_paramedic, nick_name, token });
       } else {
         return res.status(500).json({ error: "Invalid Credentials" });
       }
