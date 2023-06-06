@@ -28,7 +28,6 @@ const missionSchema = new Schema({
   },
   mission_type: {
     type: String,
-    enum: ["case 1", "case 2", "case 3", "case 4"],
     required: true,
   },
   case_id: {
