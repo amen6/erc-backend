@@ -9,12 +9,6 @@ router.get("/", userAuth, hospitalController.getAllHospitals);
 router.get("/:id", userAuth, hospitalController.getHospital);
 router.delete("/:id", userAuth, adminAuth, hospitalController.deleteHospital);
 router.patch("/:id", userAuth, adminAuth, hospitalController.editHospital);
-router.post(
-  "/",
-  imageUpload,
-  userAuth,
-  adminAuth,
-  hospitalController.addHospital
-);
+router.post("/", userAuth, adminAuth, hospitalController.addHospital);
 
 export default router;

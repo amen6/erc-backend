@@ -10,6 +10,9 @@ import adminAuth from "../middleware/adminAuth.js";
 // get all patients
 router.get("/", userAuth, adminAuth, patientController.getAllPatients);
 
+// get all patients
+router.get("/count/", userAuth, adminAuth, patientController.countAllPatients);
+
 // get all patients names
 router.get(
   "/name/",

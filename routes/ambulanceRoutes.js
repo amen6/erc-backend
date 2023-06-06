@@ -10,13 +10,7 @@ import adminAuth from "../middleware/adminAuth.js";
 router.get("/", userAuth, adminAuth, ambulanceController.getAllAmbulances);
 
 // create a new event
-router.post(
-  "/",
-  imageUpload,
-  userAuth,
-  adminAuth,
-  ambulanceController.addAmbulance
-);
+router.post("/", userAuth, adminAuth, ambulanceController.addAmbulance);
 
 // get a specific event by ID
 router.get("/:id", userAuth, adminAuth, ambulanceController.getAmbulance);

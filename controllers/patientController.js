@@ -100,6 +100,15 @@ class Patient {
       next(error);
     }
   }
+
+  async countAllPatients(req, res, next) {
+    try {
+      const count = await PatientModel.count();
+      res.status(200).json({ success: true, data: count });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 const PatientController = new Patient();
